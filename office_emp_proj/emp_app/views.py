@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse
 from .models import Department, Role, Employee
 from django.contrib import messages
+from django.db.models import Q
 
 def index(request):
     return render(request, 'index.html')
@@ -82,10 +83,30 @@ def remove_emp(request, emp_id=None):
         'emps': emps
     }
     return render(request, 'remove_emp.html', context)
-
 def filter_emp(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         dept = request.POST.get('dept')
         role = request.POST.get('role')
-    return render(request, 'filter_emp.html')
+        
+        emps = Employee.objects.all()
+        
+        # Apply filters based on input, removing `.first()` to get all matching employees
+        if name:
+            emps = emps.filter(Q(first_name__icontains=name) | Q(last_name__icontains=name))
+        if dept:
+            emps = emps.filter(dept__name__icontains=dept)  # Assuming `dept` is a ForeignKey to a `Department` model
+        if role:
+            emps = emps.filter(role__name__icontains=role)  # Assuming `role` is a ForeignKey to a `Role` model
+
+        context = {
+            'emps': emps
+        }
+        return render(request, 'view_all_emp.html', context)
+
+    elif request.method == 'GET':
+        messages.error(request, 'Invalid request.....!')
+        return render(request, 'filter_emp.html')
+    
+    else:
+        messages.success(request, 'Invalid request....!')
