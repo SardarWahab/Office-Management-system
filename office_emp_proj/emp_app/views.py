@@ -69,9 +69,9 @@ def add_emp(request):
     }
     return render(request, 'add_emp.html', context)  # Render form with context data
 
-def remove_emp(request, emp_id=None):
+def remove_emp(request, emp_id=None):  # sourcery skip: use-named-expression
     if emp_id:
-        emp = Employee.objects.filter(id=emp_id).first()  # Filter for a single employee, returns None if not found
+        emp = Employee.objects.filter(id=emp_id).first()
         if emp:
             emp.delete()
             messages.success(request, 'Employee removed successfully.')
