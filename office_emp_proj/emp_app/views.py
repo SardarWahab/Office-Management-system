@@ -79,7 +79,7 @@ def remove_emp(request, emp_id=None):
         'emps': emps
     }
     return render(request, 'remove_emp.html', context)
-def filter_emp(request):
+def filter_emp(request):  
     if request.method == 'POST':
         name = request.POST.get('name')
         dept = request.POST.get('dept')
