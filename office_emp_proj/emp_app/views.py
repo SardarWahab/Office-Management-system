@@ -24,22 +24,19 @@ def add_emp(request):
             messages.success(request,'Department and Role addded successfully...')
             return redirect(add_emp)
 
-        # Adding an Employee
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        dept = request.POST.get('dept')  # Assuming this is the department ID
+        dept = request.POST.get('dept')  
         salary = request.POST.get('salary')
         bonus = request.POST.get('bonus')
-        role = request.POST.get('role')  # Assuming this is the role ID
+        role = request.POST.get('role') 
         phone = request.POST.get('phone')
         hire_date = request.POST.get('hire_date')
 
         try:
-            # Retrieve the Department instance
             department_instance = Department.objects.get(id=dept)
             role_instance = Role.objects.get(id=role)
 
-            # Create new employee
             new_emp = Employee(
                 first_name=first_name,
                 last_name=last_name,
@@ -60,16 +57,15 @@ def add_emp(request):
             messages.error(request,'Role does not exist...')
             return redirect(add_emp)
 
-    # Prepare context data for the form if not POST
     departments = Department.objects.all()
     roles = Role.objects.all()
     context = {
         'departments': departments,
         'roles': roles,
     }
-    return render(request, 'add_emp.html', context)  # Render form with context data
+    return render(request, 'add_emp.html', context) 
 
-def remove_emp(request, emp_id=None):  # sourcery skip: use-named-expression
+def remove_emp(request, emp_id=None):  
     if emp_id:
         emp = Employee.objects.filter(id=emp_id).first()
         if emp:
@@ -91,14 +87,12 @@ def filter_emp(request):
         
         emps = Employee.objects.all()
         
-        # Apply filters based on input, removing `.first()` to get all matching employees
         if name:
             emps = emps.filter(Q(first_name__icontains=name) | Q(last_name__icontains=name))
         if dept:
-            emps = emps.filter(dept__name__icontains=dept)  # Assuming `dept` is a ForeignKey to a `Department` model
+            emps = emps.filter(dept__name__icontains=dept) 
         if role:
-            emps = emps.filter(role__name__icontains=role)  # Assuming `role` is a ForeignKey to a `Role` model
-
+            emps = emps.filter(role__name__icontains=role)  
         context = {
             'emps': emps
         }
